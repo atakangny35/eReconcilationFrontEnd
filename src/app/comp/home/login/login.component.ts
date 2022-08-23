@@ -12,6 +12,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class LoginComponent implements OnInit {
   tokenStaroge:string="token";
+  isvalid:boolean=false;
   hasLoginProcess=true;
 loginForm:UntypedFormGroup;
   constructor(private authService: AuthService,private router:Router,private formBuilder:UntypedFormBuilder,private toasterService:ToastrService) { }
@@ -22,7 +23,7 @@ loginForm:UntypedFormGroup;
 CreateLoginForm(){
   this.loginForm=this.formBuilder.group(
     {
-      email:["",(Validators.required)],
+      email:["",(Validators.required,Validators.email)],
       password:["",Validators.required]
     }
 
@@ -56,6 +57,10 @@ login()
       this.toasterService.error("Fill the required Place!","Error");
     }
     
+}
+controlvalid(){
+  console.log('test');
+  this.isvalid=this.loginForm.valid ?true:false;
 }
 
 

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LoginModel } from '../models/loginModel';
+import { registerModel } from '../models/registerModel';
 import { singleDataResponseModel } from '../models/responseModel';
 import { tokenModel } from '../models/tokenModel';
 
@@ -16,6 +17,10 @@ export class AuthService {
 login(loginmodel:LoginModel)
 {
   return this.http.post<tokenModel>(this.url+'auth/login',loginmodel);
+}
+register(registermodel:registerModel)
+{
+  return this.http.post(this.url+'auth',registermodel);
 }
 isAuth(){
   /*

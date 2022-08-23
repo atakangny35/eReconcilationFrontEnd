@@ -56,9 +56,9 @@
               </div>
               <div class="card-body">
                 <form  class="text-start" role="form" [formGroup]="loginForm" >
-                  <div class="input-group input-group-outline my-3">
+                  <div class="input-group input-group-outline my-3" [class]="isvalid==true ? 'is-valid':'is-invalid'">
                     <label class="form-label">Email</label>
-                    <input type="email" formControlName="email"  class="form-control" >
+                    <input type="email" formControlName="email"  class="form-control " (keydown)="controlvalid()" >
                   </div>
                   <div class="input-group input-group-outline mb-3">
                     <label class="form-label">Password</label>
@@ -79,7 +79,7 @@
                   </div>
                   <p class="mt-4 text-sm text-center">
                     Don't have an account?
-                    <a href="../pages/sign-up.html" class="text-primary text-gradient font-weight-bold">Sign up</a>
+                    <a href="/register" class="text-primary text-gradient font-weight-bold">Sign up</a>
                   </p>
                 </form>
               </div>
