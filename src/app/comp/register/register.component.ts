@@ -12,6 +12,11 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 
 export class RegisterComponent implements OnInit {
+ 
+ 
+ 
+ 
+ 
   registerModel:registerModel={
     userRegisterModel: undefined,
     company: undefined
