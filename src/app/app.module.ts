@@ -10,12 +10,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { RegisterComponent } from './comp/register/register.component';
+import { NavComponent } from './comp/nav/nav.component';
+import { AsideComponent } from './comp/aside/aside.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    NavComponent,
+    AsideComponent
   ],
   imports: [
     BrowserModule,

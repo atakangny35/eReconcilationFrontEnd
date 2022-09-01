@@ -41,17 +41,17 @@
                 </div>
                 <div class="card-body">
                   <form role="form" #form="ngForm" (ngSubmit)="register(Name.value,Email.value,Password.value,CompanyName.value,Address.value,TaxDepartment.value,TaxIdNumber.value,IdentityNumber.value)">
-                    <div class="input-group input-group-outline mb-3">
+                    <div [class]="getclasslist(namecheck)" >
                       <label class="form-label">Name</label>
-                      <input type="text" ngModel #Name [ngModelOptions]="{standalone: true}" name="name" class="form-control">
+                      <input type="text" [(ngModel)]="namecheck" #Name [ngModelOptions]="{standalone: true}" name="name"  class="form-control ">
                     </div>
-                    <div class="input-group input-group-outline mb-3">
+                    <div [class]="getclasslist(emailcheck)">
                       <label class="form-label">Email</label>
-                      <input type="email" ngModel  #Email [ngModelOptions]="{standalone: true}" name="email" class="form-control">
+                      <input type="email" [(ngModel)]="emailcheck"  #Email [ngModelOptions]="{standalone: true}" name="email" class="form-control">
                     </div>
-                    <div class="input-group input-group-outline mb-3">
+                    <div [class]="getclasslist(passwordcheck)">
                       <label class="form-label">Password</label>
-                      <input type="password" ngModel [ngModelOptions]="{standalone: true}" #Password class="form-control">
+                      <input type="password" [(ngModel)]="passwordcheck" [ngModelOptions]="{standalone: true}" #Password class="form-control">
                     </div>
                     <h4>Company Information</h4>
                     <div class="input-group input-group-outline mb-3">
@@ -78,14 +78,16 @@
                     </div>
 
                     <div class="form-check form-check-info text-start ps-0">
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
+                      <input class="form-check-input" type="checkbox" #check [(ngModel)]="Termscheck" [ngModelOptions]="{standalone: true}" id="flexSwitchCheckDefault">
                       <label class="form-check-label" for="flexCheckDefault">
-                        I agree the <a href="javascript:;" class="text-dark font-weight-bolder">Terms and Conditions</a>
+                        I agree the <a  class="text-dark font-weight-bolder" data-bs-toggle="modal" data-bs-target="#exampleModal">Terms and Conditions</a>
                       </label>
                     </div>
+                    
                     <div class="text-center">
                       <button type="submit" class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0">Sign Up</button>
                     </div>
+                    
                   </form>
                 </div>
                 <div class="card-footer text-center pt-0 px-lg-2 px-1">
@@ -119,3 +121,26 @@
 </body>
 
 </html>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <p [innerHtml]="terms?.description"></p> 
+      </div>
+      <div class="modal-footer">
+        
+        <button type="button" class="btn bg-gradient-primary" data-bs-dismiss="modal" (click)="checkcontrol(check)">I Agree</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

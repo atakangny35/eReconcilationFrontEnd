@@ -14,11 +14,15 @@ export class LoginComponent implements OnInit {
   tokenStaroge:string="token";
   isvalid:boolean=false;
   hasLoginProcess=true;
+  email:string;
+  confirmemail:string="sdasdas";
+  password:string;
 loginForm:UntypedFormGroup;
   constructor(private authService: AuthService,private router:Router,private formBuilder:UntypedFormBuilder,private toasterService:ToastrService) { }
 
   ngOnInit(): void {
     this.CreateLoginForm();
+
   }
 CreateLoginForm(){
   this.loginForm=this.formBuilder.group(
@@ -37,7 +41,8 @@ login()
       this.hasLoginProcess=false;
       let loginModel =Object.assign({},this.loginForm.value);
       this.authService.login(loginModel).subscribe((next)=>{
-         // console.log(next);
+          console.log(next);
+          console.log('token test');
          if(this.authService.redirectUrl){
             this.router.navigate([this.authService.redirectUrl]);
             this.toasterService.success("Welcome Back","Hello");
@@ -62,6 +67,17 @@ controlvalid(){
   console.log('test');
   this.isvalid=this.loginForm.valid ?true:false;
 }
-
+SendConfirmEmail(){
+  if(this.confirmemail!=null)
+  { //console.log(this.confirmemail+'test1')
+      this.authService.SendConfirmEmail(this.confirmemail).subscribe((next)=>{this.toasterService.success('Mail has been sended','Success')},err=>{this.toasterService.error(err.error)});
+  }
+  else{
+    this.toasterService.warning('Email is required','Warning')
+  }
+}
+getclasslist(value:string){
+    return value==null ? 'input-group input-group-outline mb-3 is-invalid':'input-group input-group-outline mb-3 is-valid';
+  }
 
 }
