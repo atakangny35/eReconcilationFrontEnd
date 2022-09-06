@@ -1,0 +1,100 @@
+
+
+
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark" id="sidenav-main">
+    <app-aside></app-aside>
+  </aside>
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+      <app-nav></app-nav>
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+              <div class="card my-4">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                  <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                    <div class="row">
+                        <div class="col-md-3">
+                        <h6 class="text-white text-capitalize ps-3 mt-2">Currency List</h6>
+                        </div>
+                        <div class="col-md-3">
+                           <a href="" class="btn bg-gradient-info">Add</a> 
+                        </div>
+                        <div class="col-md-3">
+                            <a href="" class="btn btn-warning"> <i class="material-icons opacity-10">attach_file</i> Add from excel</a> 
+                         </div>
+                         <div class="col-md-3">
+                            <a href="" class="btn btn-primary">sss</a> 
+                         </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body px-0 pb-2">
+                  <h4 class="table-responsive p-0 text-center text-m" *ngIf="!ShowList">There is no user for this company!</h4>
+                  <div class="table-responsive p-0" *ngIf="ShowList">
+                    <table class="table align-items-center mb-0" >
+                      <thead>
+                        <tr>
+                          <th class="text-secondary opacity-7">Currency Information</th>
+                          <th class="text-secondary opacity-7">Tax Department/number/I.D</th>
+                          <th class="text-secondary text-center opacity-7">Email</th>
+                          <th class="text-secondary opacity-7">Added Date</th>
+                          <th class="text-secondary text-center opacity-7">Authorized Person</th>
+                          
+                          <th class="text-secondary text-center opacity-7">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody *ngFor="let item of currencyAcouuntList">
+                        <tr>
+                          <td>
+                            <div class="d-flex px-2 py-1">
+                              
+                              <div class="d-flex flex-column justify-content-center">
+                                <h6 class="mb-0 text-sm">{{item.name}}</h6>
+                                <p class="text-xs text-secondary mb-0">{{item.code}}</p>
+                                <p class="text-xs text-secondary mb-0">{{item.taxDepartment}}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <p class="text-sm font-weight-bold mb-0"> <i class="text-danger"> T.dep:</i> {{item.taxDepartment}}</p>
+                            <p class="text-sm text-secondary mb-0"><i class="text-danger"> T.number:</i> {{item.taxIdNumber!=null?item.taxIdNumber:'there is no id'}}</p>
+                            <p class="text-sm text-secondary mb-0"><i class="text-danger"> I.D:</i>{{item.identityNumber}}</p>
+                          </td>
+                          <td class="align-middle text-center text-sm">
+                            <h6 class="mb-0 text-sm">{{item.email}}</h6>
+                          </td>
+                          <td>
+                            <p class="text-sm font-weight-bold mb-0"> <i class="text-danger"> AddedAt:</i> {{item.addedTime}}</p>
+                            <p class="text-sm text-secondary mb-0"><i class="text-danger"> Status:</i> {{item.taxIdNumber!=null?item.taxIdNumber:'there is no id'}}</p>
+
+                          </td>
+                          <td class="align-middle text-center">
+                            <span class="text-secondary text-xs font-weight-bold">{{item.addedTime}}</span>
+                          </td>
+                          <td class="align-middle text-center"><span class="text-secondary text-xs font-weight-bold">{{item.authorized}}</span></td>
+                          <td class="align-middle">
+                            <a href="javascript:;" class="text-secondary text-center font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                              Edit
+                            </a>
+                          </td>
+                        </tr>
+                      
+                       
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+  </main>
+
+  <!--   Core JS Files   -->
+  
+  
+
+
+

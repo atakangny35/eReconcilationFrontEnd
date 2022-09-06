@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LoginModel } from '../models/loginModel';
 import { registerModel } from '../models/registerModel';
@@ -13,11 +13,16 @@ import { tokenModel } from '../models/tokenModel';
 export class AuthService {
   redirectUrl: string="";
   tokenStaroge:string="token";
-  constructor(private http:HttpClient) { }
-  url:string='https://localhost:44319/api/';
+  constructor(private http:HttpClient,@Inject('url') private url:string) {
+    
+   }
+  //url:string='https://localhost:44319/api/';
 login(loginmodel:LoginModel)
 {
   return this.http.post<tokenModel>(this.url+'auth/login',loginmodel);
+}
+LogOut(){
+  localStorage.removeItem(this.tokenStaroge);
 }
 register(registermodel:registerModel)
 {
@@ -37,7 +42,7 @@ isAuth(){
 }
  
 SendConfirmEmail(confirm:string){
-  console.log(confirm);
+  //console.log(confirm);
   //let api='https://localhost:44319/api/auth/sendConfirmMail';
   //return this.http.post(,confirm);
   return this.http.post<ResponseModel>(this.url+'auth/sendconfirmmail?emaillll='+confirm,this.tokenStaroge);

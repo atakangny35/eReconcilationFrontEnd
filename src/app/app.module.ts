@@ -5,13 +5,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './comp/home/home.component';
 import { LoginComponent } from './comp/home/login/login.component';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { RegisterComponent } from './comp/register/register.component';
 import { NavComponent } from './comp/nav/nav.component';
 import { AsideComponent } from './comp/aside/aside.component';
+import { CurrencyAccountComponent } from './comp/currency-account/currency-account.component';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,8 @@ import { AsideComponent } from './comp/aside/aside.component';
     LoginComponent,
     RegisterComponent,
     NavComponent,
-    AsideComponent
+    AsideComponent,
+    CurrencyAccountComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +38,11 @@ import { AsideComponent } from './comp/aside/aside.component';
     }), // ToastrModule added
     
   ],
-  providers: [],
+  providers: [
+    {provide:'url',useValue:'https://localhost:44319/api/'},
+    {provide:HTTP_INTERCEPTORS,useClass:AuthInterceptor,multi:true}
+
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
