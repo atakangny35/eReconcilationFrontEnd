@@ -30,22 +30,40 @@
                     </div>
                   </div>
                 </div>
+                <div class="card-body m-1">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="input-group input-group-outline my-2">
+                        <label  class="form-label">Search</label>
+                        <input type="text" autocomplete="off" [(ngModel)]="searchvalue" class="form-control">
+                      </div>                     
+                  </div>
+                  <div class="col-md-1">
+                                        
+                </div>
+                  <div class="col-md-3">
+                    <div class="input-group input-group-outline my-2">
+                      <a href="" class="btn btn-info" (click)="exportExcel()"> <i class="fa fa-file-excel-o"></i> Get curreny List To excel</a> 
+                    </div>                     
+                </div>
+                </div>
+              </div>
                 <div class="card-body px-0 pb-2">
                   <h4 class="table-responsive p-0 text-center text-m" *ngIf="!ShowList">There is no user for this company!</h4>
                   <div class="table-responsive p-0" *ngIf="ShowList">
-                    <table class="table align-items-center mb-0" >
+                    <table id="excel-table" class="table align-items-center mb-0" >
                       <thead>
                         <tr>
                           <th class="text-secondary opacity-7">Currency Information</th>
                           <th class="text-secondary opacity-7">Tax Department/number/I.D</th>
                           <th class="text-secondary text-center opacity-7">Email</th>
-                          <th class="text-secondary opacity-7">Added Date</th>
-                          <th class="text-secondary text-center opacity-7">Authorized Person</th>
-                          
+                          <th class="text-secondary opacity-7">Added Date</th>       
+                          <th class="text-secondary text-center opacity-7">Authorized Person</th>                                           
                           <th class="text-secondary text-center opacity-7">Actions</th>
+
                         </tr>
                       </thead>
-                      <tbody *ngFor="let item of currencyAcouuntList">
+                      <tbody *ngFor="let item of currencyAcouuntList | currencyAccountPipe  :searchvalue ">
                         <tr>
                           <td>
                             <div class="d-flex px-2 py-1">
@@ -67,21 +85,16 @@
                           </td>
                           <td>
                             <p class="text-sm font-weight-bold mb-0"> <i class="text-danger"> AddedAt:</i> {{item.addedTime}}</p>
-                            <p class="text-sm text-secondary mb-0"><i class="text-danger"> Status:</i> {{item.taxIdNumber!=null?item.taxIdNumber:'there is no id'}}</p>
+                            <p class="text-sm text-secondary mb-0"><i class="text-danger"> Status:</i> <span [class]="changeSpanClass(item.isActive)">{{item.isActive==true? "Active":"Not active"}}</span></p>
 
                           </td>
-                          <td class="align-middle text-center">
-                            <span class="text-secondary text-xs font-weight-bold">{{item.addedTime}}</span>
-                          </td>
+                         
                           <td class="align-middle text-center"><span class="text-secondary text-xs font-weight-bold">{{item.authorized}}</span></td>
                           <td class="align-middle">
-                            <a href="javascript:;" class="text-secondary text-center font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                              Edit
-                            </a>
+                            <a href="" class="btn btn-sm btn-primary mx-1" title="edit"> <i class="material-icons opacity-10">edit</i> </a>
+                            <a href="" class="btn btn-sm btn-warning" title="Delete"><i class="material-icons opacity-10">restore_from_trash</i></a>
                           </td>
-                        </tr>
-                      
-                       
+                        </tr>                      
                       </tbody>
                     </table>
                   </div>

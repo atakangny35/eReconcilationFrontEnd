@@ -9,6 +9,6 @@ export interface CurrencyAccount{
       email:string;
       authorized:string;
       addedTime:Date;
-      IsActive:boolean;
-      Companyid:number;
+      isActive:boolean;
+      companyid:number;
 }

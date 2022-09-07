@@ -14,6 +14,7 @@ import { NavComponent } from './comp/nav/nav.component';
 import { AsideComponent } from './comp/aside/aside.component';
 import { CurrencyAccountComponent } from './comp/currency-account/currency-account.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { CurrencyAccountPipe } from './pipe/currency-account.pipe';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     RegisterComponent,
     NavComponent,
     AsideComponent,
-    CurrencyAccountComponent
+    CurrencyAccountComponent,
+    CurrencyAccountPipe
   ],
   imports: [
     BrowserModule,
