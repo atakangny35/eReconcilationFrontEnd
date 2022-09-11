@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CurrencyAccount } from '../models/currencyAccount';
-import { listDataResponseModel } from '../models/responseModel';
+import { listDataResponseModel, ResponseModel, singleDataResponseModel } from '../models/responseModel';
 /*
 const httpOptions ={
   headers:new HttpHeaders({
@@ -21,10 +21,23 @@ export class CurrencyAccountService {
 GetList(companyId:number):Observable<listDataResponseModel<CurrencyAccount>>{
   return this.http.get<listDataResponseModel<CurrencyAccount>>(this.url+"currencyaccount"+"/getList"+"?companyid="+companyId);
 }
+GetById(Id:number):Observable<singleDataResponseModel<CurrencyAccount>>{
+  return this.http.get<singleDataResponseModel<CurrencyAccount>>(this.url+"currencyaccount"+"/getbyid"+"?id="+Id);
+}
 
+delete(id:number):Observable<ResponseModel>
+{
+  return this.http.delete<ResponseModel>(this.url+"currencyaccount"+"/delete?id="+id);
+}
 
-
-
+update(currencyAccount:CurrencyAccount):Observable<ResponseModel>
+{
+  return this.http.put<ResponseModel>(this.url+"currencyaccount"+"/update",currencyAccount);
+}
+Add(currencyAccount:CurrencyAccount):Observable<ResponseModel>
+{
+  return this.http.post<ResponseModel>(this.url+"currencyaccount"+"/add",currencyAccount);
+}
 
 }
 

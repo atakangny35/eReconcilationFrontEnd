@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -15,6 +15,8 @@ import { AsideComponent } from './comp/aside/aside.component';
 import { CurrencyAccountComponent } from './comp/currency-account/currency-account.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { CurrencyAccountPipe } from './pipe/currency-account.pipe';
+import { NgxSpinnerModule } from 'ngx-spinner';
+
 
 @NgModule({
   declarations: [
@@ -32,6 +34,7 @@ import { CurrencyAccountPipe } from './pipe/currency-account.pipe';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    NgxSpinnerModule,
     ReactiveFormsModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot({
@@ -40,6 +43,7 @@ import { CurrencyAccountPipe } from './pipe/currency-account.pipe';
     }), // ToastrModule added
     
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     {provide:'url',useValue:'https://localhost:44319/api/'},
     {provide:HTTP_INTERCEPTORS,useClass:AuthInterceptor,multi:true}

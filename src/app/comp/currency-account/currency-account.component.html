@@ -1,4 +1,5 @@
 
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "large" color = "#821121" type = "line-scale-pulse-out" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
 
 
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark" id="sidenav-main">
@@ -19,7 +20,7 @@
                         <h6 class="text-white text-capitalize ps-3 mt-2">Currency List</h6>
                         </div>
                         <div class="col-md-3">
-                           <a href="" class="btn bg-gradient-info">Add</a> 
+                           <a href="" class="btn bg-gradient-info" data-bs-toggle="modal" type="button" data-bs-target="#AddModal">Add</a> 
                         </div>
                         <div class="col-md-3">
                             <a href="" class="btn btn-warning"> <i class="material-icons opacity-10">attach_file</i> Add from excel</a> 
@@ -38,9 +39,21 @@
                         <input type="text" autocomplete="off" [(ngModel)]="searchvalue" class="form-control">
                       </div>                     
                   </div>
-                  <div class="col-md-1">
-                                        
+                  <div class="col-md-3">
+                    <div class="form-check form-switch d-flex align-items-center my-2">
+                      <input class="form-check-input" [(ngModel)]="status"  (change)="getlist(companyId)" [ngModelOptions]="{standalone: true}" type="checkbox" id="status">
+                      <label class="form-check-label mb-0 ms-2"  for="status">Actif/Pacif</label>
+                    </div>   
+             
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-check form-switch d-flex align-items-center my-2">
+                      <input class="form-check-input" [(ngModel)]="statusAll"   (change)="changecheckbox()" [ngModelOptions]="{standalone: true}" type="checkbox" id="statusAll">
+                      <label class="form-check-label mb-0 ms-2"  for="statusAll">All</label>
+                    </div>   
+             
                 </div>
+                
                   <div class="col-md-3">
                     <div class="input-group input-group-outline my-2">
                       <a href="" class="btn btn-info" (click)="exportExcel()"> <i class="fa fa-file-excel-o"></i> Get curreny List To excel</a> 
@@ -91,8 +104,9 @@
                          
                           <td class="align-middle text-center"><span class="text-secondary text-xs font-weight-bold">{{item.authorized}}</span></td>
                           <td class="align-middle">
-                            <a href="" class="btn btn-sm btn-primary mx-1" title="edit"> <i class="material-icons opacity-10">edit</i> </a>
-                            <a href="" class="btn btn-sm btn-warning" title="Delete"><i class="material-icons opacity-10">restore_from_trash</i></a>
+                            <a  class="btn btn-sm btn-primary mx-1" data-bs-toggle="modal" (click)="GetCurrencyAccount(item.id)" type="button" data-bs-target="#UpdateModal"  title="edit"> <i class="material-icons opacity-10">edit</i> </a>
+                            <a  class="btn btn-sm btn-warning" (click)="ChangeStatus(item)" title="ChangeStatus"><i class="material-icons opacity-10">restore_from_trash</i></a>
+                            <a  class="btn btn-sm btn-warning" (click)="delete(item.id)" title="Delete"><i class="material-icons opacity-10">restore_from_trash</i></a>
                           </td>
                         </tr>                      
                       </tbody>
@@ -108,6 +122,111 @@
   <!--   Core JS Files   -->
   
   
+<!-- Modal -->
+<div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Add Currencies</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form role="form" (ngSubmit)="Add(Name.value,Address.value,Email.value,Authorized.value,Code.value,TaxDepartment.value,TaxIdNumber.value)">
+      <div class="modal-body">
+        
+                <div class="input-group input-group-outline mb-3">
+                  <label class="form-label">Name</label>
+                  <input type="text" ngModel [ngModelOptions]="{standalone: true}" #Name required class="form-control">
+              </div>
+              <div class="input-group input-group-outline mb-3">
+                <label class="form-label">Address</label>
+                <input type="text" ngModel [ngModelOptions]="{standalone: true}" required #Address class="form-control">
+              </div>
+                <div class="input-group input-group-outline mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" ngModel [ngModelOptions]="{standalone: true}" required #Email class="form-control">
+                </div>
+                  <div class="input-group input-group-outline mb-3">
+                  <label class="form-label">Authorized Person</label>
+                  <input type="text" ngModel [ngModelOptions]="{standalone: true}" #Authorized class="form-control">
+                  </div>
+                  <div class="input-group input-group-outline mb-3">
+                    <label class="form-label">Code</label>
+                    <input type="text" ngModel [ngModelOptions]="{standalone: true}" #Code required class="form-control">
+                  </div>
+                  <div class="input-group input-group-outline mb-3">
+                    <label class="form-label">Tax Department</label>
+                    <input type="text" ngModel [ngModelOptions]="{standalone: true}" #TaxDepartment class="form-control">
+                  </div>
+                  <div class="input-group input-group-outline mb-3">
+                    <label class="form-label">Tax Id Number</label>
+                    <input type="text" ngModel [ngModelOptions]="{standalone: true}" #TaxIdNumber class="form-control">
+                  </div>
+                  
+                
+      </div>
+   
+      <div class="modal-footer">
+        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn bg-gradient-primary">Add</button>
+      </div>
+    </form> 
+    </div>
+  </div>
+</div>
 
+<div class="modal fade" id="UpdateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel2">Update</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form role="form" (ngSubmit)="Update(UpdateName.value,UpdateAddress.value,UpdateEmail.value,UpdateAuthorized.value,UpdateCode.value,UpdateTaxDepartment.value,UpdateTaxIdNumber.value)">
+      <div class="modal-body">
+        
+                <div class="input-group input-group-outline mb-3 ">
+                  <label class="form-label">Name</label>
+                  <input type="text" ngModel [ngModelOptions]="{standalone: true}" #UpdateName value={{currencyAcouuntListAddModel?.name}} required class="form-control modalForm">
+              </div>
+              <div class="input-group input-group-outline mb-3">
+                <label class="form-label">Address</label>
+                <input type="text" ngModel [ngModelOptions]="{standalone: true}" value={{currencyAcouuntListAddModel?.address}} required #UpdateAddress class="form-control modalForm">
+              </div>
+                <div class="input-group input-group-outline mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" ngModel [ngModelOptions]="{standalone: true}" value={{currencyAcouuntListAddModel.email}} required #UpdateEmail class="form-control modalForm">
+                </div>
+                  <div class="input-group input-group-outline mb-3">
+                  <label class="form-label">Authorized Person</label>
+                  <input type="text" ngModel [ngModelOptions]="{standalone: true}" value={{currencyAcouuntListAddModel.authorized}} #UpdateAuthorized class="form-control modalForm">
+                  </div>
+                  <div class="input-group input-group-outline mb-3">
+                    <label class="form-label">Code</label>
+                    <input type="text" ngModel [ngModelOptions]="{standalone: true}" #UpdateCode value={{currencyAcouuntListAddModel.code}} required class="form-control modalForm">
+                  </div>
+                  <div class="input-group input-group-outline mb-3">
+                    <label class="form-label">Tax Department</label>
+                    <input type="text" ngModel [ngModelOptions]="{standalone: true}" #UpdateTaxDepartment value={{currencyAcouuntListAddModel.taxDepartment}} class="form-control modalForm">
+                  </div>
+                  <div class="input-group input-group-outline mb-3">
+                    <label class="form-label">Tax Id Number</label>
+                    <input type="text" ngModel [ngModelOptions]="{standalone: true}" #UpdateTaxIdNumber value={{currencyAcouuntListAddModel.taxIdNumber}} class="form-control modalForm">
+                  </div>
+                  
+                
+      </div>
+   
+      <div class="modal-footer">
+        <button type="button" class="btn bg-gradient-secondary" id="submitbutton" data-bs-dismiss="modal">Close</button>
+        <button type="submit"  class="btn bg-gradient-primary">Update</button>
+      </div>
+    </form> 
+    </div>
+  </div>
+</div>
 
 

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { CurrencyAccount } from 'src/app/models/currencyAccount';
 import { CurrencyAccountService } from 'src/app/services/currency-account.service';
@@ -12,23 +13,43 @@ import * as XLSX from 'xlsx';
 })
 export class CurrencyAccountComponent implements OnInit {
   currencyAcouuntList:CurrencyAccount[]=[];
+  currencyAcouuntListAddModel:CurrencyAccount={
+    code: '',
+    name: '',
+    address: '',
+    taxDepartment: '',
+    taxIdNumber: '',
+    identityNumber: '',
+    email: '',
+    authorized: '',
+    companyid: 0,
+    Id: null,
+    addedTime: undefined,
+    isActive: null
+  };
  decodedToken:any;
  companyId:any;
  tokenStorege :string="token";
  JwtHelper =new JwtHelperService();
  ShowList:boolean;
  searchvalue:string="";
-  constructor(private currenyaccountService:CurrencyAccountService,private ToastrService:ToastrService) { }
+ status:boolean=true;
+ statusAll:boolean=true;
+  constructor(private currenyaccountService:CurrencyAccountService,private ToastrService:ToastrService,private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
     this.getDecodedToken();
     this.getlist(this.companyId);
-    console.log(this.currencyAcouuntList);
+    
+    //console.log(this.currencyAcouuntList);
   }
 
   getlist(companyId:number){
+    
+    this.spinner.show();
     this.currenyaccountService.GetList(companyId).subscribe(next=>{this.currencyAcouuntList=next.data;
-        console.log(next.data);
+       // console.log(next.data);
+       this.spinner.hide();
       if(next.data.length==0)
       { 
         this.ShowList=false;
@@ -36,10 +57,17 @@ export class CurrencyAccountComponent implements OnInit {
       else{
         
         this.ShowList=true;
+        if(!this.statusAll)
+        { 
+          this.currencyAcouuntList=  this.currencyAcouuntList.filter(x=>x.isActive==this.status);
+          
+        }
+       
       }
     
     },err=>{
-        this.ToastrService.error(err.error,'Error!');      
+        this.ToastrService.error('Service Can not accesible,Please try again Later','Error!'); 
+        this.spinner.hide();     
     });
     
   }
@@ -69,5 +97,102 @@ export class CurrencyAccountComponent implements OnInit {
 
     XLSX.writeFile(wb,'cariliste.xlsx');
 
+  }
+
+  clear(){
+    document.getElementsByClassName('modalForm')[0].ariaPlaceholder=null;
+
+  }
+  
+  GetCurrencyAccount(id:number){
+    this.spinner.show();
+    this.currenyaccountService.GetById(id).subscribe(next=>{
+      this.currencyAcouuntListAddModel=next.data;
+    },err=>{
+        this.ToastrService.error(err.error);
+    })
+    this.spinner.hide();
+  }
+
+  delete(id :number)
+  {   
+    this.spinner.show();
+    this.currenyaccountService.delete(id).subscribe(next=>{
+      
+      if(next.success){
+        this.getlist(this.companyId);
+        this.spinner.hide();
+      }
+      this.spinner.hide();
+    },err=>{
+      this.ToastrService.error(err.error)
+      this.spinner.hide();
+    })
+  }
+  Add(Name:string,Address:string,Email :string,Authorized :string,Code:string,TaxDepartment:string,TaxIdNumber:string){
+      this.currencyAcouuntListAddModel.companyid=this.companyId;
+      this.currencyAcouuntListAddModel.authorized=Authorized;
+      this.currencyAcouuntListAddModel.name=Name;
+      this.currencyAcouuntListAddModel.address=Address;
+      this.currencyAcouuntListAddModel.email=Email;
+      this.currencyAcouuntListAddModel.code=Code;
+      this.currencyAcouuntListAddModel.taxDepartment=TaxDepartment;
+      this.currencyAcouuntListAddModel.taxIdNumber=TaxIdNumber;
+      this.currenyaccountService.Add(this.currencyAcouuntListAddModel).subscribe(next=>{
+        console.log(next);
+        if(next.success)
+        {
+        this.getlist(this.companyId);
+        this.spinner.hide();
+        this.ToastrService.success(next.message)
+        }
+      this.spinner.hide();}
+        ,err=>
+        {
+          this.ToastrService.error(err.error)
+          this.spinner.hide();
+
+        })
+
+  }
+  Update(Name:string,Address:string,Email:string,Authorized:string,Code:string,TaxDepartment:string,TaxIdNumber:string){
+    this.spinner.show();
+    this.currencyAcouuntListAddModel.companyid=this.companyId;
+    this.currencyAcouuntListAddModel.authorized=Authorized;
+    this.currencyAcouuntListAddModel.name=Name;
+    this.currencyAcouuntListAddModel.address=Address;
+    this.currencyAcouuntListAddModel.email=Email;
+    this.currencyAcouuntListAddModel.code=Code;
+    this.currencyAcouuntListAddModel.taxDepartment=TaxDepartment;
+    this.currencyAcouuntListAddModel.taxIdNumber=TaxIdNumber;
+
+    this.currenyaccountService.update(this.currencyAcouuntListAddModel).subscribe(next=>{
+        this.ToastrService.success(next.message);
+        document.getElementById('submitbutton').click();
+    },err=>{
+      this.ToastrService.error(err.error);
+    });
+    this.getlist(this.companyId);
+    
+    this.spinner.hide();
+  }
+
+  ChangeStatus(currencyAccount:CurrencyAccount){
+    if(currencyAccount.isActive==true){
+      currencyAccount.isActive=false;
+    }
+    else{
+      currencyAccount.isActive=true;
+    }
+    this.currenyaccountService.update(currencyAccount).subscribe(next=>{
+      if(next.success)
+      {
+        this.ToastrService.success('Succes!!');
+      }
+    },err=>{console.log(err);this.ToastrService.error(err)});
+  }
+  changecheckbox(){
+     this.status=false;
+     this.getlist(this.companyId);
   }
 }
