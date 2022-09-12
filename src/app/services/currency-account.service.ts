@@ -38,7 +38,13 @@ Add(currencyAccount:CurrencyAccount):Observable<ResponseModel>
 {
   return this.http.post<ResponseModel>(this.url+"currencyaccount"+"/add",currencyAccount);
 }
-
+AddFromExcel(file:any,companyId:number):Observable<ResponseModel>
+{
+  const formData=new FormData;
+  formData.append("file",file,file.name)
+  console.log(this.url+"currencyaccount"+"/addFromExcel"+"?companyid="+companyId);
+  return this.http.post<ResponseModel>(this.url+"currencyaccount"+"/addFromExcel"+"?companyid="+companyId,formData);
+}
 }
 
 

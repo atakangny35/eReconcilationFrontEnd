@@ -17,7 +17,7 @@ export class AuthInterceptor implements HttpInterceptor {
   JwtHelper =new JwtHelperService();
   constructor(private router:Router) {}
 
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let token =localStorage.getItem('token');
 
     if(this.JwtHelper.isTokenExpired(token) || token ==null )

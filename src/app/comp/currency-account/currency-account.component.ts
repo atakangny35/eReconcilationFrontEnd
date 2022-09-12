@@ -35,6 +35,7 @@ export class CurrencyAccountComponent implements OnInit {
  searchvalue:string="";
  status:boolean=true;
  statusAll:boolean=true;
+ file:string;
   constructor(private currenyaccountService:CurrencyAccountService,private ToastrService:ToastrService,private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
@@ -194,5 +195,23 @@ export class CurrencyAccountComponent implements OnInit {
   changecheckbox(){
      this.status=false;
      this.getlist(this.companyId);
+  }
+  onChange(event:any){
+    this.file=event.target.files[0];
+  }
+  addFromExcel(){
+    if(this.file!=null || this.file=="")
+    {
+      this.spinner.show();
+      this.currenyaccountService.AddFromExcel(this.file,this.companyId).subscribe(next=>{
+
+          this.ToastrService.success(next.message);
+        this.spinner.hide();
+        document.getElementById('closebutton').click();
+      },err=>{
+        this.spinner.hide();
+        this.ToastrService.error(err.error);
+      })
+    }
   }
 }

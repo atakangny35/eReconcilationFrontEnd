@@ -23,7 +23,7 @@
                            <a href="" class="btn bg-gradient-info" data-bs-toggle="modal" type="button" data-bs-target="#AddModal">Add</a> 
                         </div>
                         <div class="col-md-3">
-                            <a href="" class="btn btn-warning"> <i class="material-icons opacity-10">attach_file</i> Add from excel</a> 
+                            <a type="button" class="btn btn-warning" data-bs-target="#AddFromExcelModal" data-bs-toggle="modal"> <i class="material-icons opacity-10">attach_file</i> Add from excel</a> 
                          </div>
                          <div class="col-md-3">
                             <a href="" class="btn btn-primary">sss</a> 
@@ -105,8 +105,8 @@
                           <td class="align-middle text-center"><span class="text-secondary text-xs font-weight-bold">{{item.authorized}}</span></td>
                           <td class="align-middle">
                             <a  class="btn btn-sm btn-primary mx-1" data-bs-toggle="modal" (click)="GetCurrencyAccount(item.id)" type="button" data-bs-target="#UpdateModal"  title="edit"> <i class="material-icons opacity-10">edit</i> </a>
-                            <a  class="btn btn-sm btn-warning" (click)="ChangeStatus(item)" title="ChangeStatus"><i class="material-icons opacity-10">restore_from_trash</i></a>
-                            <a  class="btn btn-sm btn-warning" (click)="delete(item.id)" title="Delete"><i class="material-icons opacity-10">restore_from_trash</i></a>
+                            <a  class="btn btn-sm btn-warning mx-1" (click)="ChangeStatus(item)" title="ChangeStatus"><i class="material-icons opacity-10">restore_from_trash</i></a>
+                            <a  class="btn btn-sm btn-danger mx-1" (click)="delete(item.id)" title="Delete"><i class="material-icons opacity-10">restore_from_trash</i></a>
                           </td>
                         </tr>                      
                       </tbody>
@@ -188,32 +188,32 @@
       <form role="form" (ngSubmit)="Update(UpdateName.value,UpdateAddress.value,UpdateEmail.value,UpdateAuthorized.value,UpdateCode.value,UpdateTaxDepartment.value,UpdateTaxIdNumber.value)">
       <div class="modal-body">
         
-                <div class="input-group input-group-outline mb-3 ">
-                  <label class="form-label">Name</label>
+                <div class="input-group input-group-dynamic  mb-3 ">
+                  <span class="input-group-text" id="basic-addon1">Name</span>
                   <input type="text" ngModel [ngModelOptions]="{standalone: true}" #UpdateName value={{currencyAcouuntListAddModel?.name}} required class="form-control modalForm">
               </div>
-              <div class="input-group input-group-outline mb-3">
-                <label class="form-label">Address</label>
+              <div class="input-group input-group-dynamic mb-3">
+                <span class="input-group-text" id="basic-addon1">Address</span>
                 <input type="text" ngModel [ngModelOptions]="{standalone: true}" value={{currencyAcouuntListAddModel?.address}} required #UpdateAddress class="form-control modalForm">
               </div>
-                <div class="input-group input-group-outline mb-3">
-                <label class="form-label">Email</label>
+                <div class="input-group input-group-dynamic mb-3">
+                  <span class="input-group-text" id="basic-addon1">Email</span>
                 <input type="email" ngModel [ngModelOptions]="{standalone: true}" value={{currencyAcouuntListAddModel.email}} required #UpdateEmail class="form-control modalForm">
                 </div>
-                  <div class="input-group input-group-outline mb-3">
-                  <label class="form-label">Authorized Person</label>
+                  <div class="input-group input-group-dynamic mb-3">
+                    <span class="input-group-text" id="basic-addon1">Authorized</span>
                   <input type="text" ngModel [ngModelOptions]="{standalone: true}" value={{currencyAcouuntListAddModel.authorized}} #UpdateAuthorized class="form-control modalForm">
                   </div>
-                  <div class="input-group input-group-outline mb-3">
-                    <label class="form-label">Code</label>
+                  <div class="input-group input-group-dynamic mb-3">
+                    <span class="input-group-text" id="basic-addon1">Code</span>
                     <input type="text" ngModel [ngModelOptions]="{standalone: true}" #UpdateCode value={{currencyAcouuntListAddModel.code}} required class="form-control modalForm">
                   </div>
-                  <div class="input-group input-group-outline mb-3">
-                    <label class="form-label">Tax Department</label>
+                  <div class="input-group input-group-dynamic mb-3">
+                    <span class="input-group-text" id="basic-addon1">TaxDepartment</span>
                     <input type="text" ngModel [ngModelOptions]="{standalone: true}" #UpdateTaxDepartment value={{currencyAcouuntListAddModel.taxDepartment}} class="form-control modalForm">
                   </div>
-                  <div class="input-group input-group-outline mb-3">
-                    <label class="form-label">Tax Id Number</label>
+                  <div class="input-group input-group-dynamic mb-3">
+                    <span class="input-group-text" id="basic-addon1">Tax Id Number</span>
                     <input type="text" ngModel [ngModelOptions]="{standalone: true}" #UpdateTaxIdNumber value={{currencyAcouuntListAddModel.taxIdNumber}} class="form-control modalForm">
                   </div>
                   
@@ -223,6 +223,34 @@
       <div class="modal-footer">
         <button type="button" class="btn bg-gradient-secondary" id="submitbutton" data-bs-dismiss="modal">Close</button>
         <button type="submit"  class="btn bg-gradient-primary">Update</button>
+      </div>
+    </form> 
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="AddFromExcelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel3">Add From Excel</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form role="form" (ngSubmit)="addFromExcel()">
+      <div class="modal-body">
+        <div class="mb-3">    
+          <br>    
+          <input class="form-control" type="file" id="formFile" (change)="onChange($event)">
+          <br>
+          <h6><a href="/../assets/file/Cariler.xlsx" class="text-sm font-weight-bold mb-0" > Click  Here To Download Exempla Data </a></h6>
+        </div>             
+      </div>
+   
+      <div class="modal-footer">
+        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal" id="closebutton">Close</button>
+        <button type="submit" class="btn bg-gradient-primary">Upload</button>
       </div>
     </form> 
     </div>
