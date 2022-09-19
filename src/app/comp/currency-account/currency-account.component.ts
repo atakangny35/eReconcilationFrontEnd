@@ -1,9 +1,12 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { CurrencyAccount } from 'src/app/models/currencyAccount';
+import { userOperationClaim } from 'src/app/models/operationClaim';
 import { CurrencyAccountService } from 'src/app/services/currency-account.service';
+import { UserOperationClaimService } from 'src/app/services/user-operation-claim.service';
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -13,6 +16,7 @@ import * as XLSX from 'xlsx';
 })
 export class CurrencyAccountComponent implements OnInit {
   currencyAcouuntList:CurrencyAccount[]=[];
+  useroperationClaimList: userOperationClaim[]=[];
   currencyAcouuntListAddModel:CurrencyAccount={
     code: '',
     name: '',
@@ -27,7 +31,10 @@ export class CurrencyAccountComponent implements OnInit {
     addedTime: undefined,
     isActive: null
   };
+
+ operationCrud:boolean=false;
  decodedToken:any;
+ userid:number;
  companyId:any;
  tokenStorege :string="token";
  JwtHelper =new JwtHelperService();
@@ -36,10 +43,13 @@ export class CurrencyAccountComponent implements OnInit {
  status:boolean=true;
  statusAll:boolean=true;
  file:string;
-  constructor(private currenyaccountService:CurrencyAccountService,private ToastrService:ToastrService,private spinner: NgxSpinnerService) { }
+  constructor(private currenyaccountService:CurrencyAccountService,private ToastrService:ToastrService,private spinner: NgxSpinnerService,
+              private useroperationclaimservice:UserOperationClaimService,private datePipe:DatePipe
+    ) { }
 
   ngOnInit(): void {
     this.getDecodedToken();
+    this.GetUserOperationList();
     this.getlist(this.companyId);
     
     //console.log(this.currencyAcouuntList);
@@ -75,10 +85,13 @@ export class CurrencyAccountComponent implements OnInit {
   getDecodedToken(){
     let token=localStorage.getItem(this.tokenStorege);
     this.decodedToken=this.JwtHelper.decodeToken(token);
-    //console.log(this.decodedToken);
+    this.userid=this.decodedToken.nameid;
+    //console.log(this.decodedToken.nameid);
     let name =Object.keys(this.decodedToken).filter(x=>x.endsWith("/anonymous"))[0];
    this.companyId=this.decodedToken[name];
-    //
+
+
+ 
     //console.log(this.companyId);
   }
   changeSpanClass(value:boolean){
@@ -130,30 +143,39 @@ export class CurrencyAccountComponent implements OnInit {
       this.spinner.hide();
     })
   }
-  Add(Name:string,Address:string,Email :string,Authorized :string,Code:string,TaxDepartment:string,TaxIdNumber:string){
-      this.currencyAcouuntListAddModel.companyid=this.companyId;
-      this.currencyAcouuntListAddModel.authorized=Authorized;
-      this.currencyAcouuntListAddModel.name=Name;
-      this.currencyAcouuntListAddModel.address=Address;
-      this.currencyAcouuntListAddModel.email=Email;
-      this.currencyAcouuntListAddModel.code=Code;
-      this.currencyAcouuntListAddModel.taxDepartment=TaxDepartment;
-      this.currencyAcouuntListAddModel.taxIdNumber=TaxIdNumber;
-      this.currenyaccountService.Add(this.currencyAcouuntListAddModel).subscribe(next=>{
-        console.log(next);
-        if(next.success)
-        {
-        this.getlist(this.companyId);
-        this.spinner.hide();
-        this.ToastrService.success(next.message)
-        }
-      this.spinner.hide();}
-        ,err=>
-        {
-          this.ToastrService.error(err.error)
+  Add(Name:string,Address:string,Email :string,Authorized :string,Code:string,TaxDepartment:string,TaxIdNumber:string,form:any){
+      console.log(form.controls);
+    if(form.valid)
+      {
+        this.currencyAcouuntListAddModel.companyid=this.companyId;
+        this.currencyAcouuntListAddModel.authorized=Authorized;
+        this.currencyAcouuntListAddModel.name=Name;
+        this.currencyAcouuntListAddModel.address=Address;
+        this.currencyAcouuntListAddModel.email=Email;
+        this.currencyAcouuntListAddModel.code=Code;
+        this.currencyAcouuntListAddModel.taxDepartment=TaxDepartment;
+        this.currencyAcouuntListAddModel.taxIdNumber=TaxIdNumber;
+        this.currenyaccountService.Add(this.currencyAcouuntListAddModel).subscribe(next=>{
+          console.log(next);
+          if(next.success)
+          {
+          this.getlist(this.companyId);
           this.spinner.hide();
+          this.ToastrService.success(next.message)
+          }
+        this.spinner.hide();}
+          ,err=>
+          {
+            this.ToastrService.error(err.error)
+            this.spinner.hide();
 
-        })
+          })
+      }
+      else{
+       
+            this.ToastrService.warning('Please fill the required fields');
+      
+       }
 
   }
   Update(Name:string,Address:string,Email:string,Authorized:string,Code:string,TaxDepartment:string,TaxIdNumber:string){
@@ -214,4 +236,34 @@ export class CurrencyAccountComponent implements OnInit {
       })
     }
   }
+  GetUserOperationList(){
+     
+    this.spinner.show();
+    this.useroperationclaimservice.GetList(this.userid,this.companyId).subscribe(next=>{
+        this.useroperationClaimList=next.data;
+        this.SetPageAuthorize();
+       this.spinner.hide();    
+    
+    },err=>{
+        this.ToastrService.error('Service Can not accesible,Please try again Later','Error!'); 
+        this.spinner.hide();     
+    });
+  }
+
+  SetPageAuthorize(){
+    this.useroperationClaimList.forEach(claim => {
+        if(claim.operationClaimName=='Admin'){
+
+          this.operationCrud=true;
+        }
+        else if(claim.operationClaimName=="CurrencyAccount.crud"){
+          this.operationCrud=true
+        }
+        else{
+          this.operationCrud=false;
+        }
+    });
+  }
+
+
 }

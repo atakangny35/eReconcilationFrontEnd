@@ -42,13 +42,13 @@ login()
       let loginModel =Object.assign({},this.loginForm.value);
       this.authService.login(loginModel).subscribe((next)=>{
           console.log(next);
-          console.log('token test');
+          //console.log('token test');
          if(this.authService.redirectUrl){
             this.router.navigate([this.authService.redirectUrl]);
             this.toasterService.success("Welcome Back","Hello");
          }
          else{
-          this.router.navigate([""]);
+          this.router.navigate(["/home"]);
           
          }
          localStorage.setItem(this.tokenStaroge,next.token);

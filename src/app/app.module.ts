@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { DatePipe } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './comp/home/home.component';
@@ -16,6 +16,7 @@ import { CurrencyAccountComponent } from './comp/currency-account/currency-accou
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { CurrencyAccountPipe } from './pipe/currency-account.pipe';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { UserComponent } from './comp/user/user.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     NavComponent,
     AsideComponent,
     CurrencyAccountComponent,
-    CurrencyAccountPipe
+    CurrencyAccountPipe,
+    UserComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +48,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     {provide:'url',useValue:'https://localhost:44319/api/'},
-    {provide:HTTP_INTERCEPTORS,useClass:AuthInterceptor,multi:true}
+    {provide:HTTP_INTERCEPTORS,useClass:AuthInterceptor,multi:true},
+    DatePipe
 
   ],
   bootstrap: [AppComponent]

@@ -43,7 +43,7 @@
                   <form role="form" #form="ngForm" (ngSubmit)="register(Name.value,Email.value,Password.value,CompanyName.value,Address.value,TaxDepartment.value,TaxIdNumber.value,IdentityNumber.value)">
                     <div [class]="getclasslist(namecheck)" >
                       <label class="form-label">Name</label>
-                      <input type="text" [(ngModel)]="namecheck" #Name [ngModelOptions]="{standalone: true}" name="name"  class="form-control ">
+                      <input type="text" [(ngModel)]="namecheck" #Name #namevalid="ngModel" (change)="getValidstatus(namevalid)" [ngModelOptions]="{standalone: true}" name="name"  class="form-control ">
                     </div>
                     <div [class]="getclasslist(emailcheck)">
                       <label class="form-label">Email</label>
@@ -85,7 +85,7 @@
                     </div>
                     
                     <div class="text-center">
-                      <button type="submit" class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0">Sign Up</button>
+                      <button type="submit"  class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0">Sign Up</button>
                     </div>
                     
                   </form>

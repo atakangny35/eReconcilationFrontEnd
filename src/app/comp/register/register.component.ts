@@ -89,5 +89,9 @@ export class RegisterComponent implements OnInit {
   getclasslist(value:string){
     return value==null ? 'input-group input-group-outline mb-3 is-invalid':'input-group input-group-outline mb-3 is-valid';
   }
+  getValidstatus(namevalid:any)
+  {
+      console.log(namevalid);
+  }
   
 }

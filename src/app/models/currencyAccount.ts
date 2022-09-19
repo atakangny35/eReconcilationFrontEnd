@@ -8,7 +8,7 @@ export interface CurrencyAccount{
       identityNumber:string;
       email:string;
       authorized:string;
-      addedTime:Date;
+      addedTime:string;
       isActive:boolean;
       companyid:number;
 }

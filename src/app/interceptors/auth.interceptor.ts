@@ -20,9 +20,12 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let token =localStorage.getItem('token');
 
-    if(this.JwtHelper.isTokenExpired(token) || token ==null )
+    if(token!=null)
     {
-      this.router.navigate([""]);
+      if(this.JwtHelper.isTokenExpired(token)  )
+      { 
+        this.router.navigate([""]);
+      }
     }
 
     let newRequest: HttpRequest<any>;

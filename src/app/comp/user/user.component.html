@@ -1,0 +1,119 @@
+
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "large" color = "#821121" type = "line-scale-pulse-out" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+
+
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark" id="sidenav-main">
+  <app-aside></app-aside>
+</aside>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+  <!-- Navbar -->
+    <app-nav></app-nav>
+  <!-- End Navbar -->
+  <div class="container-fluid py-4">
+      <div class="row">
+          <div class="col-12">
+            <div class="card my-4">
+              <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-info shadow-primary border-radius-lg pt-4 pb-3">
+                  <div class="row">
+                      <div class="col-md-4">
+                      <h6 class="text-white text-capitalize ps-3 mt-2">User List</h6>
+                      </div>
+                      <div class="col-md-4">
+                         <a href="" class="btn bg-gradient-success" *ngIf="operationCrud" data-bs-toggle="modal" type="button" data-bs-target="#AddModal">Add</a> 
+                      </div>                   
+                  </div>
+                </div>
+              </div>
+              <div class="card-body m-1">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="input-group input-group-outline my-2">
+                      <label  class="form-label">Search</label>
+                      <input type="text" autocomplete="off" [(ngModel)]="searchvalue" class="form-control">
+                    </div>                     
+                </div>
+                <div class="col-md-3">
+                  <div class="form-check form-switch d-flex align-items-center my-2">
+                    <input class="form-check-input" [(ngModel)]="status"  (change)="getlist(userid)" [ngModelOptions]="{standalone: true}" type="checkbox" id="status">
+                    <label class="form-check-label mb-0 ms-2"  for="status">Actif/Pacif</label>
+                  </div>   
+           
+                </div>
+                <div class="col-md-3">
+                  <div class="form-check form-switch d-flex align-items-center my-2">
+                    <input class="form-check-input" [(ngModel)]="statusAll"   (change)="changecheckbox()" [ngModelOptions]="{standalone: true}" type="checkbox" id="statusAll">
+                    <label class="form-check-label mb-0 ms-2"  for="statusAll">All</label>
+                  </div>   
+           
+              </div>
+              
+                <div class="col-md-3">
+                  <div class="input-group input-group-outline my-2">
+                    <a href="" class="btn btn-info" (click)="exportExcel()"> <i class="fa fa-file-excel-o"></i> Get User List To excel</a> 
+                  </div>                     
+              </div>
+              </div>
+            </div>
+              <div class="card-body px-0 pb-2">
+                <h4 class="table-responsive p-0 text-center text-m" *ngIf="!ShowList">There is no user for this company!</h4>
+                <div class="table-responsive p-0" *ngIf="ShowList">
+                  <table id="excel-table" class="table align-items-center mb-0" >
+                    <thead>
+                      <tr>
+                        <th class="text-secondary opacity-7">Currency Information</th>
+                        <th class="text-secondary opacity-7">Tax Department/number/I.D</th>
+                        <th class="text-secondary text-center opacity-7">Email</th>
+                        <th class="text-secondary opacity-7">Added Date</th>       
+                        <th class="text-secondary text-center opacity-7">Authorized Person</th>                                           
+                        <th class="text-secondary text-center opacity-7">Actions</th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                     
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  </div>
+</main>
+
+<!--   Core JS Files   -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Add Users</h5>
+      <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<div class="modal fade" id="UpdateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title font-weight-normal" id="exampleModalLabel2">Update</h5>
+      <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+   
+  </div>
+</div>
+</div>
+
+
+
+
