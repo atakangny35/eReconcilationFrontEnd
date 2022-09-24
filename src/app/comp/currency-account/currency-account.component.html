@@ -97,7 +97,7 @@
                             <h6 class="mb-0 text-sm">{{item.email}}</h6>
                           </td>
                           <td>
-                            <p class="text-sm font-weight-bold mb-0"> <i class="text-danger"> AddedAt:</i>{{item.addedTime| date:'mediumDate'}}</p>
+                            <p class="text-sm font-weight-bold mb-0"> <i class="text-danger"> AddedAt:</i>{{item.addedTime | date:'dd.MM.yyyy'}}</p>
                             <p class="text-sm text-secondary mb-0"><i class="text-danger"> Status:</i> <span [class]="changeSpanClass(item.isActive)">{{item.isActive==true? "Active":"Not active"}}</span></p>
 
                           </td>

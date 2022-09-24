@@ -1,0 +1,128 @@
+
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "large" color = "#821121" type = "line-scale-pulse-out" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+
+
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark" id="sidenav-main">
+  <app-aside></app-aside>
+</aside>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+  <!-- Navbar -->
+    <app-nav></app-nav>
+  <!-- End Navbar -->
+  <div class="container-fluid py-4">
+      <div class="row">
+          <div class="col-12">
+            <div class="card my-4">
+              <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                  <div class="row">
+                      <div class="col-md-3">
+                      <h6 class="text-white text-capitalize ps-3 mt-2">Company List</h6>
+                      </div>
+                      <div class="col-md-3">
+                         <a href="" class="btn bg-gradient-info" *ngIf="operationCrud" data-bs-toggle="modal" type="button" data-bs-target="#AddModal">Add</a> 
+                      </div>
+
+                
+                       <div class="col-md-3">
+                          <a href="" class="btn btn-primary">sss</a> 
+                       </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body m-1">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="input-group input-group-outline my-2">
+                      <label  class="form-label">Search</label>
+                      <input type="text" autocomplete="off" [(ngModel)]="searchvalue" class="form-control">
+                    </div>                     
+                </div>
+                <div class="col-md-3">
+                  <div class="form-check form-switch d-flex align-items-center my-2">
+                    <input class="form-check-input" [(ngModel)]="status"  (change)="getlist()" [ngModelOptions]="{standalone: true}" type="checkbox" id="status">
+                    <label class="form-check-label mb-0 ms-2"  for="status">Actif/Pacif</label>
+                  </div>   
+           
+                </div>
+                <div class="col-md-3">
+                  <div class="form-check form-switch d-flex align-items-center my-2">
+                    <input class="form-check-input" [(ngModel)]="statusAll"   (change)="changecheckbox()" [ngModelOptions]="{standalone: true}" type="checkbox" id="statusAll">
+                    <label class="form-check-label mb-0 ms-2"  for="statusAll">All</label>
+                  </div>   
+           
+              </div>
+              
+                <div class="col-md-3">
+                  <div class="input-group input-group-outline my-2">
+                    <a href="" class="btn btn-info" (click)="exportExcel()"> <i class="fa fa-file-excel-o"></i> Get curreny List To excel</a> 
+                  </div>                     
+              </div>
+              </div>
+            </div>
+              <div class="card-body px-0 pb-2">
+                <h4 class="table-responsive p-0 text-center text-m" *ngIf="!ShowList">There is no Assigned compnay for this User!</h4>
+                <div class="table-responsive p-0" *ngIf="ShowList">
+                  <table id="excel-table" class="table align-items-center mb-0" >
+                    <thead>
+                      <tr>
+                        <th class="text-secondary opacity-7">Company Name</th>
+                        <th class="text-secondary opacity-7">Adress</th>
+                        <th class="text-secondary opacity-7">Tax Department</th>
+                        <th class="text-secondary text-center opacity-7">Tax Number</th>
+                        <th class="text-secondary text-center opacity-7">I.N</th>
+                        <th class="text-secondary opacity-7">Added Date</th>                                                 
+                        <th class="text-secondary text-center opacity-7">Actions</th>
+
+                      </tr>
+                    </thead>
+                    <tbody *ngFor="let item of CompanyList | companyPipe: searchvalue ">
+                        <tr>
+                            <td class="align-middle text-center text-sm">
+                                <h6 class="mb-0 text-sm">{{item.name}}</h6>
+                            </td>
+
+                            <td class="align-middle text-center text-sm">
+                                <h6 class="mb-0 text-sm">{{item.address}}</h6>
+                            </td>
+
+                            <td class="align-middle text-center text-sm">
+                                <h6 class="mb-0 text-sm">{{item.taxDepartment}}</h6>
+                            </td>
+                            <td class="align-middle text-center text-sm">
+                                <h6 class="mb-0 text-sm">{{item.taxIdNumber}}</h6>
+                            </td>
+                            <td class="align-middle text-center text-sm">
+                                <h6 class="mb-0 text-sm">{{item.identityNumber}}</h6>
+                            </td>
+                       
+                          <td>
+                            <p class="text-sm font-weight-bold mb-0"> <i class="text-danger"> AddedAt:</i>{{item.addedTime | date:'dd.MM.yyyy'}}</p>
+                            <p class="text-sm text-secondary mb-0"><i class="text-danger"> Status:</i> <span [class]="changeSpanClass(item.isActive)">{{item.isActive==true? "Active":"Not active"}}</span></p>
+
+                          </td>
+                         
+                          <td class="align-middle">
+                            <a  class="btn btn-sm btn-primary mx-1" data-bs-toggle="modal" (click)="GetCompany(item.id)" type="button" data-bs-target="#UpdateModal"  title="edit"> <i class="material-icons opacity-10">edit</i> </a>
+                            <a  class="btn btn-sm btn-warning mx-1" (click)="ChangeStatus(item)" title="ChangeStatus"><i class="material-icons opacity-10">restore_from_trash</i></a>
+                            <a  class="btn btn-sm btn-danger mx-1" *ngIf="operationCrud" (click)="delete(item.id)" title="Delete"><i class="material-icons opacity-10">restore_from_trash</i></a>
+                          </td>
+                        </tr>                      
+                      </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  </div>
+</main>
+
+<!--   Core JS Files   -->
+
+
+<!-- Modal -->
+
+
+
+

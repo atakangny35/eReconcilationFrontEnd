@@ -251,18 +251,19 @@ export class CurrencyAccountComponent implements OnInit {
   }
 
   SetPageAuthorize(){
+    
     this.useroperationClaimList.forEach(claim => {
         if(claim.operationClaimName=='Admin'){
-
+          
           this.operationCrud=true;
         }
         else if(claim.operationClaimName=="CurrencyAccount.crud"){
+          
           this.operationCrud=true
         }
-        else{
-          this.operationCrud=false;
-        }
+        
     });
+    console.log(this.operationCrud);
   }
 
 

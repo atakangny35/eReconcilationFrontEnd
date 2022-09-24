@@ -17,7 +17,8 @@
                 <div class="bg-gradient-info shadow-primary border-radius-lg pt-4 pb-3">
                   <div class="row">
                       <div class="col-md-4">
-                      <h6 class="text-white text-capitalize ps-3 mt-2">User List</h6>
+                      <h6 class="text-white text-capitalize ps-3 mt-2">User List </h6>
+                      <p class="text-white text-capitalize ps-3 mt-2">Only the current users is listed in this field</p>
                       </div>
                       <div class="col-md-4">
                          <a href="" class="btn bg-gradient-success" *ngIf="operationCrud" data-bs-toggle="modal" type="button" data-bs-target="#AddModal">Add</a> 
@@ -35,7 +36,7 @@
                 </div>
                 <div class="col-md-3">
                   <div class="form-check form-switch d-flex align-items-center my-2">
-                    <input class="form-check-input" [(ngModel)]="status"  (change)="getlist(userid)" [ngModelOptions]="{standalone: true}" type="checkbox" id="status">
+                    <input class="form-check-input" [(ngModel)]="status"  (change)="GetUserList(companyId)" [ngModelOptions]="{standalone: true}" type="checkbox" id="status">
                     <label class="form-check-label mb-0 ms-2"  for="status">Actif/Pacif</label>
                   </div>   
            
@@ -61,17 +62,50 @@
                   <table id="excel-table" class="table align-items-center mb-0" >
                     <thead>
                       <tr>
-                        <th class="text-secondary opacity-7">Currency Information</th>
-                        <th class="text-secondary opacity-7">Tax Department/number/I.D</th>
-                        <th class="text-secondary text-center opacity-7">Email</th>
-                        <th class="text-secondary opacity-7">Added Date</th>       
-                        <th class="text-secondary text-center opacity-7">Authorized Person</th>                                           
-                        <th class="text-secondary text-center opacity-7">Actions</th>
+                        <th class="text-secondary opacity-7">User Name</th>
+                        <th class="text-secondary opacity-7">Mail Address</th>
+                        <th class="text-secondary text-center opacity-7">AddedAt</th>
+                        <th class="text-secondary opacity-7">Status</th>       
+                        <th class="text-secondary text-center opacity-7">Actions</th>                                           
 
                       </tr>
                     </thead>
                     <tbody>
-                     
+                      <tr *ngFor="let item of userCompanyDtoList | userPipe:searchvalue   ">
+                        <td>
+                          <div class="d-flex px-2 py-1">
+                            
+                            <div class="d-flex flex-column justify-content-center">
+                              <h6 class="mb-0 text-sm">{{item.name}}</h6>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <h6 class="mb-0 text-sm">{{item.email}}</h6>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <div class="d-flex px-2 py-1">
+                            
+                            <div class="d-flex flex-column justify-content-center text-center">
+                              <h6 class="mb-0 text-sm text-center">AddedAt: {{item.userAddedTime | date:'dd.MM.yyyy'}}</h6>
+                            </div>
+                          </div>
+                        </td>
+                        
+                        <td>
+                          <div class="d-flex px-2 py-1">
+                            
+                            <div class="d-flex flex-column justify-content-center">
+                              <h6 class="mb-0 text-sm"><i class="text-danger">Status:</i> <span [class]="changeSpanClass(item.userIsActive)">{{item.userIsActive==true? "Active":"Not active"}}</span></h6>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td class="align-middle">
+                          <a  class="btn btn-sm btn-primary mx-1 " data-bs-toggle="modal" type="button" data-bs-target="#UpdateModal"  title="edit"> <i class="material-icons opacity-10">edit</i> </a>
+                          <a  class="btn btn-sm btn-warning " (click)="ChangeStatus(item)" title="ChangeStatus"><i class="material-icons opacity-10">restore_from_trash</i></a>
+                        </td>
+                      </tr>          
                     </tbody>
                   </table>
                 </div>
@@ -85,20 +119,8 @@
 <!--   Core JS Files   -->
 
 
-<!-- Modal -->
-<div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered" role="document">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Add Users</h5>
-      <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
 
-  </div>
-</div>
-</div>
+
 
 <div class="modal fade" id="UpdateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -117,3 +139,39 @@
 
 
 
+<div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Add Users</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form role="form"  [formGroup]="useraddForm" (ngSubmit)="add()" >
+      <div class="modal-body">
+        
+                <div class="input-group input-group-outline mb-3">
+                  <label class="form-label">Name</label>
+                  <input type="text" name="name" formControlName="name"  autocomplete="off"  class="form-control">
+              </div>
+              <div class="input-group input-group-outline mb-3">
+                <label class="form-label">Password</label>
+                <input type="password"  name="password" autocomplete="off"  formControlName="password"   class="form-control">
+              </div>
+                <div class="input-group input-group-outline mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" autocomplete="off" formControlName="email" class="form-control">
+                </div>
+                  
+                
+      </div>
+   
+      <div class="modal-footer">
+        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" id="closebuttonuser" class="btn bg-gradient-primary">Add</button>
+      </div>
+    </form> 
+    </div>
+  </div>
+</div>

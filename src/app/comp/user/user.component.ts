@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, NG_ASYNC_VALIDATORS, Validators } from '@angular/forms';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { userOperationClaim } from 'src/app/models/operationClaim';
+import { UserCompanyListDto } from 'src/app/models/UserCompanyListDto';
+import { UserAddModel } from 'src/app/models/UsueAddModal';
 import { UserOperationClaimService } from 'src/app/services/user-operation-claim.service';
+import { UserService } from 'src/app/services/user.service';
 import * as XLSX from 'xlsx';
 @Component({
   selector: 'app-user',
@@ -11,9 +15,13 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./user.component.scss']
 })
 export class UserComponent implements OnInit {
+  useraddForm:FormGroup
+  userUpdateForm:FormGroup
   operationCrud:boolean=false;
   tokenStorege :string="token";
   useroperationClaimList: userOperationClaim[]=[];
+  userCompanyDtoList: UserCompanyListDto[]=[];
+  UserAddModel:UserAddModel;
   decodedToken:any;
   userid:number;
   ShowList:boolean;
@@ -22,12 +30,49 @@ export class UserComponent implements OnInit {
   status:boolean=true;
   statusAll:boolean=false;
   JwtHelper =new JwtHelperService();
-  constructor(private spinner :NgxSpinnerService, private useroperationclaimservice:UserOperationClaimService,private ToastrService:ToastrService) { }
-
+  errmsg :string;
+  constructor(private spinner :NgxSpinnerService, private useroperationclaimservice:UserOperationClaimService
+    ,private ToastrService:ToastrService,
+    private userservice: UserService
+    ,private formbuilder :FormBuilder) { }
+    
   ngOnInit(): void {
     this.getDecodedToken();
     this.GetUserOperationList();
-    //this.getlist(this.companyId);
+    this.GetUserList(this.companyId);
+    this.CreateForm();
+  }
+
+  CreateForm(){
+    this.useraddForm=this.formbuilder.group({
+        name:["",Validators.required],
+        email:["",Validators.required],
+        password:["",Validators.required],
+        companyId:[this.companyId,Validators.required]
+    });
+  }
+  add(){
+    if(this.useraddForm.valid){
+    this.spinner.show();
+    this.UserAddModel=Object.assign({},this.useraddForm.value);
+    //console.log(this.UserAddModel);
+    this.userservice.Add(this.UserAddModel).subscribe(next=>{
+        this.GetUserList(this.companyId);
+      document.getElementById('closebuttonuser').click();
+        this.ToastrService.success("User succesfuly Added!",'Success');
+    },err=>{
+      this.errmsg =err.error;
+     let b= Object.keys(this.errmsg).filter(x=>x.includes("/Error"));
+      console.log(b);
+      this.ToastrService.warning(err.error);
+    })
+    this.CreateForm();
+    
+    this.spinner.hide();
+  }
+  
+ 
+  
   }
   exportExcel(){
     let element=document.getElementById('excel-table');
@@ -35,10 +80,13 @@ export class UserComponent implements OnInit {
     const wb:XLSX.WorkBook= XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb,ws,'Sheet1');
 
-    XLSX.writeFile(wb,'cariliste.xlsx');
+    XLSX.writeFile(wb,'userList.xlsx');
 
   }
-
+  changeSpanClass(value:boolean){
+    //console.log(value);
+    return value==true ? "badge badge-sm bg-gradient-success" : "badge badge-sm bg-gradient-danger";
+  }
   getDecodedToken(){
     let token=localStorage.getItem(this.tokenStorege);
     this.decodedToken=this.JwtHelper.decodeToken(token);
@@ -70,19 +118,17 @@ export class UserComponent implements OnInit {
 
           this.operationCrud=true;
         }
-        else if(claim.operationClaimName=="CurrencyAccount.crud"){
+        else if(claim.operationClaimName=="User.crud"){
           this.operationCrud=true
         }
-        else{
-          this.operationCrud=false;
-        }
+       
     });
   }
-  getlist(userid:number){
+  GetUserList(companyId:number){
     
-    //this.spinner.show();
-    /*
-    this.useroperationclaimservice.GetList(companyId).subscribe(next=>{this.currencyAcouuntList=next.data;
+    this.spinner.show();
+    
+    this.userservice.GetUserList(companyId).subscribe(next=>{this.userCompanyDtoList=next.data;
        // console.log(next.data);
        this.spinner.hide();
       if(next.data.length==0)
@@ -94,7 +140,7 @@ export class UserComponent implements OnInit {
         this.ShowList=true;
         if(!this.statusAll)
         { 
-          this.currencyAcouuntList=  this.currencyAcouuntList.filter(x=>x.isActive==this.status);
+          this.userCompanyDtoList=  this.userCompanyDtoList.filter(x=>x.userIsActive==this.status);
           
         }
        
@@ -104,11 +150,25 @@ export class UserComponent implements OnInit {
         this.ToastrService.error('Service Can not accesible,Please try again Later','Error!'); 
         this.spinner.hide();     
     });
-    */
+    
     
   }
   changecheckbox(){
     this.status=false;
-    this.getlist(this.userid);
+    this.GetUserList(this.companyId);
  }
+ ChangeStatus(currencyAccount:any){
+  if(currencyAccount.isActive==true){
+    currencyAccount.isActive=false;
+  }
+  else{
+    currencyAccount.isActive=true;
+  }/*
+  this.currenyaccountService.update(currencyAccount).subscribe(next=>{
+    if(next.success)
+    {
+      this.ToastrService.success('Succes!!');
+    }
+  },err=>{console.log(err);this.ToastrService.error(err)});*/
+}
 }

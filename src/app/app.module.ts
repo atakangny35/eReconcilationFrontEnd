@@ -17,6 +17,11 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { CurrencyAccountPipe } from './pipe/currency-account.pipe';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { UserComponent } from './comp/user/user.component';
+import { UserPipePipe } from './pipe/user-pipe.pipe';
+import { UserFilterPipe } from './pipe/user-filter.pipe';
+import { CompanyComponent } from './comp/company/company.component';
+import { CompanyPipePipe } from './pipe/company-pipe.pipe';
+import { ErrorInterceptor } from './interceptors/error.interceptor';
 
 
 @NgModule({
@@ -29,7 +34,11 @@ import { UserComponent } from './comp/user/user.component';
     AsideComponent,
     CurrencyAccountComponent,
     CurrencyAccountPipe,
-    UserComponent
+    UserComponent,
+    UserPipePipe,
+    UserFilterPipe,
+    CompanyComponent,
+    CompanyPipePipe
   ],
   imports: [
     BrowserModule,
@@ -49,6 +58,7 @@ import { UserComponent } from './comp/user/user.component';
   providers: [
     {provide:'url',useValue:'https://localhost:44319/api/'},
     {provide:HTTP_INTERCEPTORS,useClass:AuthInterceptor,multi:true},
+    {provide:HTTP_INTERCEPTORS,useClass:ErrorInterceptor,multi:true},
     DatePipe
 
   ],
